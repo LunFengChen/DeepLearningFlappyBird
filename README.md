@@ -3,7 +3,7 @@
 (Using Deep Q-Network to Learn How To Play Flappy Bird)
 
 
-(readme.md的中文是我加的，为了致敬原作者的开源精神，予以保留)
+(readme.md的中文是我加的，为了致敬原作者的开源精神，他写的readme英文予以保留)
 
 <img src="./images/flappy_bird_demp.gif" width="250">
 
