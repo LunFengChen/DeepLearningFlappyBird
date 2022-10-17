@@ -22,7 +22,7 @@ This project follows the description of the Deep Q Learning algorithm described 
 
 
 ## 项目环境依赖（Installation Dependencies）:
-这里如果你的环境用不了，你可以试一下我的（可以通过python虚拟环境进行安装下列环境及包）
+这里如果你的环境用不了，你可以试一下我的（也可以通过python虚拟环境进行安装下列环境及包，这样可以保护你的其他项目，防止其他项目运行不了）
 
 这些是我测试后用的环境，因为原项目的包如tensorflow我下载不到0.7.0，所以进行了更新
 
@@ -32,9 +32,9 @@ This project follows the description of the Deep Q Learning algorithm described 
 * OpenCV-Python==4.6.0.66
 
 ## 怎么运行（How to Run?）
-这里是我更新后的代码，若想看原项目代码，请点击我fork的作业，进入主页搜索
+这里是我更新后的代码，若想看原项目代码，请点击我fork的这个项目的作者，进入主页搜索
 
-注意这里需要安装git，如果不会用，请直接下载源码，然后运行deep_q_network.py即可
+注意这里需要安装git，使用起来比较方便，如果不会用，也可以直接用github的下载源码压缩包功能，然后运行deep_q_network.py即可
 ```
 git clone git@github.com:LunFengChen/DeepLearningFlappyBird.git
 cd DeepLearningFlappyBird
