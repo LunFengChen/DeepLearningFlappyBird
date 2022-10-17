@@ -1,0 +1,3 @@
+把这个目录下的saved_networks移到上一层（即DeepLearningFlappyBird下即可）
+
+但是建议您在您的电脑上进行训练，观察前后变化，这样您对神经网络训练的理解

@@ -1,6 +1,11 @@
 import pygame
 import sys
 
+"""
+这个文件
+1. 载入小游戏
+"""
+
 
 def load():
     # path of player with different states
@@ -8,7 +13,7 @@ def load():
         'assets/sprites/redbird-upflap.png',
         'assets/sprites/redbird-midflap.png',
         'assets/sprites/redbird-downflap.png'
-    )
+    )  # 导入素材文件
 
     # path of background
     BACKGROUND_PATH = 'assets/sprites/background-black.png'
@@ -36,7 +41,7 @@ def load():
     IMAGES['base'] = pygame.image.load('assets/sprites/base.png').convert_alpha()
 
     # sounds
-    if 'win' in sys.platform:
+    if 'win' in sys.platform:  # 不同平台的音效文件不同
         soundExt = '.wav'
     else:
         soundExt = '.ogg'
@@ -62,7 +67,7 @@ def load():
         pygame.transform.rotate(
             pygame.image.load(PIPE_PATH).convert_alpha(), 180),
         pygame.image.load(PIPE_PATH).convert_alpha(),
-    )
+    )  # 这几段代码主要就是导入游戏中最重要的障碍物
 
     # hismask for pipes
     HITMASKS['pipe'] = (
@@ -75,7 +80,7 @@ def load():
         getHitmask(IMAGES['player'][0]),
         getHitmask(IMAGES['player'][1]),
         getHitmask(IMAGES['player'][2]),
-    )
+    )  # 返回控制小鸟运动后的不同姿态：跳跃，落下等等
 
     return IMAGES, SOUNDS, HITMASKS
 

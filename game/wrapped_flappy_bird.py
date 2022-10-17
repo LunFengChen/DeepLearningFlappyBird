@@ -7,6 +7,7 @@ import pygame.surfarray as surfarray
 from pygame.locals import *
 from itertools import cycle
 
+# 这里主要配置一些游戏的参数，如游戏界面的大小，展示图像有多少帧 等等
 FPS = 30
 SCREENWIDTH = 288
 SCREENHEIGHT = 512
@@ -29,21 +30,23 @@ BACKGROUND_WIDTH = IMAGES['background'].get_width()
 PLAYER_INDEX_GEN = cycle([0, 1, 2, 1])
 
 
-class GameState:
+class GameState:  # 定义一个类，来保存游戏运行的状态
     def __init__(self):
         self.score = self.playerIndex = self.loopIter = 0
+        # 所处游戏窗口的位置，可以理解成小鸟所处与屏幕的位置
         self.playerx = int(SCREENWIDTH * 0.2)
         self.playery = int((SCREENHEIGHT - PLAYER_HEIGHT) / 2)
         self.basex = 0
         self.baseShift = IMAGES['base'].get_width() - BACKGROUND_WIDTH
 
+        # 随机生成不同长度的障碍物（管道）
         newPipe1 = getRandomPipe()
         newPipe2 = getRandomPipe()
-        self.upperPipes = [
+        self.upperPipes = [  # 上面的管道
             {'x': SCREENWIDTH, 'y': newPipe1[0]['y']},
             {'x': SCREENWIDTH + (SCREENWIDTH / 2), 'y': newPipe2[0]['y']},
         ]
-        self.lowerPipes = [
+        self.lowerPipes = [  # 下面的管道
             {'x': SCREENWIDTH, 'y': newPipe1[1]['y']},
             {'x': SCREENWIDTH + (SCREENWIDTH / 2), 'y': newPipe2[1]['y']},
         ]
@@ -146,14 +149,14 @@ class GameState:
 
 
 def getRandomPipe():
-    """returns a randomly generated pipe"""
-    # y of gap between upper and lower pipe
+    """随机生成管道"""
+    # 管道中间的空隙所处的y坐标，一会高一会低控制小鸟前进
     gapYs = [20, 30, 40, 50, 60, 70, 80, 90]
     index = random.randint(0, len(gapYs) - 1)
     gapY = gapYs[index]
 
     gapY += int(BASEY * 0.2)
-    pipeX = SCREENWIDTH + 10
+    pipeX = SCREENWIDTH + 10  # x方向每隔多久生成一个管道
 
     return [
         {'x': pipeX, 'y': gapY - PIPE_HEIGHT},  # upper pipe
@@ -162,9 +165,11 @@ def getRandomPipe():
 
 
 def showScore(score):
-    """displays score in center of screen"""
+    """展示游戏g了之后得了多少分，displays score in center of screen"""
     scoreDigits = [int(x) for x in list(str(score))]
+    # 打印所有得分数字所需要的屏幕大小
     totalWidth = 0  # total width of all numbers to be printed
+
 
     for digit in scoreDigits:
         totalWidth += IMAGES['numbers'][digit].get_width()
@@ -182,7 +187,7 @@ def checkCrash(player, upperPipes, lowerPipes):
     player['w'] = IMAGES['player'][0].get_width()
     player['h'] = IMAGES['player'][0].get_height()
 
-    # if player crashes into ground
+    # 小鸟落地
     if player['y'] + player['h'] >= BASEY - 1:
         return True
     else:
@@ -200,7 +205,7 @@ def checkCrash(player, upperPipes, lowerPipes):
             uHitmask = HITMASKS['pipe'][0]
             lHitmask = HITMASKS['pipe'][1]
 
-            # if bird collided with upipe or lpipe
+            # 小鸟撞到了上管道与下管道，if bird collided with upipe or lpipe
             uCollide = pixelCollision(playerRect, uPipeRect, pHitMask, uHitmask)
             lCollide = pixelCollision(playerRect, lPipeRect, pHitMask, lHitmask)
 
@@ -210,7 +215,7 @@ def checkCrash(player, upperPipes, lowerPipes):
     return False
 
 
-def pixelCollision(rect1, rect2, hitmask1, hitmask2):
+def pixelCollision(rect1, rect2, hitmask1, hitmask2):  # 这个主要是游戏检测bug用的
     """Checks if two objects collide and not just their rects"""
     rect = rect1.clip(rect2)
 

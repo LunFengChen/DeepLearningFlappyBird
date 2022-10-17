@@ -1,26 +1,49 @@
-# Using Deep Q-Network to Learn How To Play Flappy Bird
+# 使用DQN神经网络让机器学习如何玩FkappyBird
+
+(Using Deep Q-Network to Learn How To Play Flappy Bird)
+
+
+(readme.md的中文是我加的，为了致敬原作者的开源精神，予以保留)
 
 <img src="./images/flappy_bird_demp.gif" width="250">
 
 7 mins version: [DQN for flappy bird](https://www.youtube.com/watch?v=THhUXIhjkCM)
 
+(这个是原项目作者做的演示视频，我没有细看，若您感兴趣，请点击链接进入youtube进行观看)
+
+## 更新这个项目的原因
+- 首先明确， fork于大佬几年前开发的项目
+- 修改原因：
+  - 作者好像遗忘了他做的这么好的一个项目
+  - 原项目运行不了
+  - 虽然简单修改后可以运行，但是代码毕竟有点久远有些地方可以微调一下，以及补上一定中文注释，方便我的小伙伴们学习神经网络
 ## Overview
 This project follows the description of the Deep Q Learning algorithm described in Playing Atari with Deep Reinforcement Learning [2] and shows that this learning algorithm can be further generalized to the notorious Flappy Bird.
 
-## Installation Dependencies:
-* Python 2.7 or 3
-* TensorFlow 0.7
-* pygame
-* OpenCV-Python
 
-## How to Run?
+## 项目环境依赖（Installation Dependencies）:
+这里如果你的环境用不了，你可以试一下我的（可以通过python虚拟环境进行安装下列环境及包）
+
+这些是我测试后用的环境，因为原项目的包如tensorflow我下载不到0.7.0，所以进行了更新
+
+* Python==3.9
+* TensorFlow==2.10.0
+* pygame==2.1.2
+* OpenCV-Python==4.6.0.66
+
+## 怎么运行（How to Run?）
+这里是我更新后的代码，若想看原项目代码，请点击我fork的作业，进入主页搜索
+
+注意这里需要安装git，如果不会用，请直接下载源码，然后运行deep_q_network.py即可
 ```
-git clone https://github.com/yenchenlin1994/DeepLearningFlappyBird.git
+git clone git@github.com:LunFengChen/DeepLearningFlappyBird.git
 cd DeepLearningFlappyBird
 python deep_q_network.py
 ```
 
-## What is Deep Q-Network?
+## 关于DQN网络(What is Deep Q-Network?)
+下面都是这个项目所涉及到的深度学习的理论知识，比较多，我就不进行翻译了，若您感兴趣，请移步google 翻译
+
 It is a convolutional neural network, trained with a variant of Q-learning, whose input is raw pixels and whose output is a value function estimating future rewards.
 
 For those who are interested in deep reinforcement learning, I highly recommend to read the following post:
@@ -84,9 +107,9 @@ During training time, at each time step, the network samples minibatches of size
 ## FAQ
 
 #### Checkpoint not found
-Change [first line of `saved_networks/checkpoint`](https://github.com/yenchenlin1994/DeepLearningFlappyBird/blob/master/saved_networks/checkpoint#L1) to 
+注意：这里我把训练好的数据放到了这个目录下的中文文件夹，您参考里面的文件即可，若有问题，请在issue里进行提问（建议中文）
 
-`model_checkpoint_path: "saved_networks/bird-dqn-2920000"`
+`model_checkpoint_path: "训练前后及训练好的模型/saved_networks/bird-dqn-2920000"`
 
 #### How to reproduce?
 1. Comment out [these lines](https://github.com/yenchenlin1994/DeepLearningFlappyBird/blob/master/deep_q_network.py#L108-L112)
