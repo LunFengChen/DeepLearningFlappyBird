@@ -1,4 +1,4 @@
-# 使用DQN神经网络让机器学习如何玩FkappyBird
+# 使用DQN神经网络让机器学习如何玩 Flappy Bird
 
 (Using Deep Q-Network to Learn How To Play Flappy Bird)
 
@@ -26,20 +26,28 @@ This project follows the description of the Deep Q Learning algorithm described 
 
 这些是我测试后用的环境，因为原项目的包如tensorflow我下载不到0.7.0，所以进行了更新
 
+(我觉得版本低一些也没啥问题，应该能运行)
+
 * Python==3.9
 * TensorFlow==2.10.0
 * pygame==2.1.2
 * OpenCV-Python==4.6.0.66
 
 ## 怎么运行（How to Run?）
-这里是我更新后的代码，若想看原项目代码，请点击我fork的这个项目的作者，进入主页搜索
+(这里是我更新后的代码，若想看原项目代码，请点击我fork的这个项目的作者，进入主页搜索
+)
+- 命令行运行
 
-注意这里需要安装git，使用起来比较方便，如果不会用，也可以直接用github的下载源码压缩包功能，然后运行deep_q_network.py即可
-```
-git clone git@github.com:LunFengChen/DeepLearningFlappyBird.git
-cd DeepLearningFlappyBird
-python deep_q_network.py
-```
+  (注意这里需要安装git从而下载源码，使用起来比较方便，如果不会用，也可以直接用github的下载源码压缩包功能，然后运行deep_q_network.py即可)
+  ```
+  git clone git@github.com:LunFengChen/DeepLearningFlappyBird.git
+  cd DeepLearningFlappyBird
+  python deep_q_network.py
+  ```
+
+- IDE 运行
+  
+  直接正常运行deep_q_network.py即可
 
 ## 关于DQN网络(What is Deep Q-Network?)
 下面都是这个项目所涉及到的深度学习的理论知识，比较多，我就不进行翻译了，若您感兴趣，请移步google 翻译

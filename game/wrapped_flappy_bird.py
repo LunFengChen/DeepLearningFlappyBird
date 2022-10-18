@@ -172,7 +172,6 @@ def showScore(score):
     # 打印所有得分数字所需要的屏幕大小
     totalWidth = 0  # total width of all numbers to be printed
 
-
     for digit in scoreDigits:
         totalWidth += IMAGES['numbers'][digit].get_width()
 
