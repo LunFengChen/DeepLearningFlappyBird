@@ -1,26 +1,35 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-import tensorflow.compat.v1 as tf
+import tensorflow.compat.v1 as tf  # 对比原项目， 这是更新后的tensorflow需要改的地方
 
 tf.disable_v2_behavior()
+
 import cv2
 import sys
-
-sys.path.append("game/")
-import wrapped_flappy_bird as game
 import random
 import numpy as np
 from collections import deque
 
-GAME = 'bird'  # the name of the game being played for log files
-ACTIONS = 2  # number of valid actions
-GAMMA = 0.99  # decay rate of past observations
-OBSERVE = 100000.  # timesteps to observe before training
-EXPLORE = 2000000.  # frames over which to anneal epsilon
-FINAL_EPSILON = 0.0001  # final value of epsilon
-INITIAL_EPSILON = 0.0001  # starting value of epsilon
-REPLAY_MEMORY = 50000  # number of previous transitions to remember
+import warnings
+
+warnings.filterwarnings("ignore")  # 红字警告看得心烦，给他忽略了
+
+# 环境变量的配置， 方便后续导入原作者写的包
+sys.path.append("game/")
+
+# 导入原作者实现flappy bird的游戏包
+import wrapped_flappy_bird as game
+
+# 游戏参数的设置，在这里可以修改神经网络中的参数
+GAME = 'bird'  # 给这个游戏命名，用于保存日志的文件夹命名 the name of the game being played for log files
+ACTIONS = 2  # 两个合法运动操作，小鸟要么不动，要么跳跃 number of valid actions
+GAMMA = 0.99  # 观测值衰减率 decay rate of past observations
+OBSERVE = 100000.  # 训练前观察的时间步骤 timestep to observe before training
+EXPLORE = 2000000.  # 退火框架（这个翻译不太好） frames over which to anneal epsilon
+INITIAL_EPSILON = 0.0001  # e的起始值 starting value of epsilon
+FINAL_EPSILON = 0.0001  # e的最终值 final value of epsilon
+REPLAY_MEMORY = 50000  # 数据存储管道长 number of previous transitions to remember
 BATCH = 32  # size of minibatch
 FRAME_PER_ACTION = 1
 
@@ -44,7 +53,7 @@ def max_pool_2x2(x):
 
 
 def createNetwork():
-    # network weights
+    # 神经网络对应权重， network weights
     W_conv1 = weight_variable([8, 8, 4, 32])
     b_conv1 = bias_variable([32])
 
@@ -60,10 +69,10 @@ def createNetwork():
     W_fc2 = weight_variable([512, ACTIONS])
     b_fc2 = bias_variable([ACTIONS])
 
-    # input layer
+    # 输入层，input layer
     s = tf.placeholder("float", [None, 80, 80, 4])
 
-    # hidden layers
+    # 隐藏层，hidden layers
     h_conv1 = tf.nn.relu(conv2d(s, W_conv1, 4) + b_conv1)
     h_pool1 = max_pool_2x2(h_conv1)
 
@@ -78,7 +87,7 @@ def createNetwork():
 
     h_fc1 = tf.nn.relu(tf.matmul(h_conv3_flat, W_fc1) + b_fc1)
 
-    # readout layer
+    # 输出层，readout layer
     readout = tf.matmul(h_fc1, W_fc2) + b_fc2
 
     return s, readout, h_fc1
@@ -88,14 +97,17 @@ def trainNetwork(s, readout, h_fc1, sess):
     # define the cost function
     a = tf.placeholder("float", [None, ACTIONS])
     y = tf.placeholder("float", [None])
+
+    # 输出动作
     readout_action = tf.reduce_sum(tf.multiply(readout, a), reduction_indices=1)
+    # 这里的损失函数是误差平方和开平方
     cost = tf.reduce_mean(tf.square(y - readout_action))
     train_step = tf.train.AdamOptimizer(1e-6).minimize(cost)
 
-    # open up a game state to communicate with emulator
+    # 打开游戏，open up a game state to communicate with emulator
     game_state = game.GameState()
 
-    # store the previous observations in replay memory
+    # 创建一个双向队列，存储一定长度的训练数据，store the previous observations in replay memory
     D = deque()
 
     # printing
@@ -112,19 +124,21 @@ def trainNetwork(s, readout, h_fc1, sess):
 
     # saving and loading networks
     saver = tf.train.Saver()
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
     checkpoint = tf.train.get_checkpoint_state("saved_networks")
-    if checkpoint and checkpoint.model_checkpoint_path:
+    if checkpoint and checkpoint.model_checkpoint_path:  # 这里是载入已训练的数据，方便下次继续训练或者观察
+        # 注意这里可以阅读readme后面，从而把已训练的数据拿出来跑
         saver.restore(sess, checkpoint.model_checkpoint_path)
         print("Successfully loaded:", checkpoint.model_checkpoint_path)
     else:
+        # 没有的话就进行初始训练
         print("Could not find old network weights")
 
-    # start training
+    # 开始训练，start training
     epsilon = INITIAL_EPSILON
     t = 0
-    while "flappy bird" != "angry bird":
-        # choose an action epsilon greedily
+    while "flappy bird" != "angry bird":  # 程序主循环
+        # 贪心选择执行的动作， choose an action epsilon greedily
         readout_t = readout.eval(feed_dict={s: [s_t]})[0]
         a_t = np.zeros([ACTIONS])
         action_index = 0
@@ -143,7 +157,7 @@ def trainNetwork(s, readout, h_fc1, sess):
         if epsilon > FINAL_EPSILON and t > OBSERVE:
             epsilon -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
 
-        # run the selected action and observe next state and reward
+        # 执行选择的动作，并且观测下一个状态，从而进行奖惩反馈 并且run the selected action and observe next state and reward
         x_t1_colored, r_t, terminal = game_state.frame_step(a_t)
         x_t1 = cv2.cvtColor(cv2.resize(x_t1_colored, (80, 80)), cv2.COLOR_BGR2GRAY)
         ret, x_t1 = cv2.threshold(x_t1, 1, 255, cv2.THRESH_BINARY)
@@ -151,7 +165,7 @@ def trainNetwork(s, readout, h_fc1, sess):
         # s_t1 = np.append(x_t1, s_t[:,:,1:], axis = 2)
         s_t1 = np.append(x_t1, s_t[:, :, :3], axis=2)
 
-        # store the transition in D
+        # 保存当前这次行动数据，塞入队列 store the transition in D
         D.append((s_t, a_t, r_t, s_t1, terminal))
         if len(D) > REPLAY_MEMORY:
             D.popleft()
@@ -177,14 +191,14 @@ def trainNetwork(s, readout, h_fc1, sess):
                 else:
                     y_batch.append(r_batch[i] + GAMMA * np.max(readout_j1_batch[i]))
 
-            # perform gradient step
+            # 梯度下降perform gradient step
             train_step.run(feed_dict={
                 y: y_batch,
                 a: a_batch,
                 s: s_j_batch}
             )
 
-        # update the old values
+        # 迭代值，记录当前第几步  update the old values
         s_t = s_t1
         t += 1
 
@@ -192,18 +206,20 @@ def trainNetwork(s, readout, h_fc1, sess):
         if t % 10000 == 0:
             saver.save(sess, 'saved_networks/' + GAME + '-dqn', global_step=t)
 
-        # print info
+        # 判断当前所处状态print info
         state = ""
         if t <= OBSERVE:
             state = "observe"
-        elif t > OBSERVE and t <= OBSERVE + EXPLORE:
+        elif OBSERVE < t <= OBSERVE + EXPLORE:
             state = "explore"
         else:
             state = "train"
 
-        print("TIMESTEP", t, "/ STATE", state, \
-              "/ EPSILON", epsilon, "/ ACTION", action_index, "/ REWARD", r_t, \
+        # 打印每一步日志
+        print("TIMESTEP", t, "/ STATE", state,
+              "/ EPSILON", epsilon, "/ ACTION", action_index, "/ REWARD", r_t,
               "/ Q_MAX %e" % np.max(readout_t))
+
         # write info to files
         '''
         if t % 10000 <= 100:
@@ -214,8 +230,11 @@ def trainNetwork(s, readout, h_fc1, sess):
 
 
 def playGame():
+    # 开始交互会话（构建计算图）
     sess = tf.InteractiveSession()
+    # 创建神经网络
     s, readout, h_fc1 = createNetwork()
+    # 开始进行训练
     trainNetwork(s, readout, h_fc1, sess)
 
 
@@ -224,4 +243,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # 右键运行本文件即可，或者命令行python + 本文件名
     main()

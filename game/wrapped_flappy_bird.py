@@ -84,6 +84,7 @@ class GameState:  # 定义一个类，来保存游戏运行的状态
             if pipeMidPos <= playerMidPos < pipeMidPos + 4:
                 self.score += 1
                 # SOUNDS['point'].play()
+                # 正确通过给几分
                 reward = 1
 
         # playerIndex basex change
@@ -126,6 +127,7 @@ class GameState:  # 定义一个类，来保存游戏运行的状态
             # SOUNDS['die'].play()
             terminal = True
             self.__init__()
+            # 错了扣积分
             reward = -1
 
         # draw sprites
