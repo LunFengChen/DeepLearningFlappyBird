@@ -113,7 +113,7 @@ During training time, at each time step, the network samples minibatches of size
 ## FAQ
 
 #### Checkpoint not found
-注意：这里我把训练好的数据放到了这个目录下的中文文件夹，您参考里面的文件即可，若有问题，请在issue里进行提问（建议中文）
+注意：这里我把训练好的数据放到了这个目录下的中文文件夹，您参考里面的文件即可，若有问题，请在issue里进行提问
 
 `model_checkpoint_path: "训练前后及训练好的模型/saved_networks/bird-dqn-2920000"`
 
