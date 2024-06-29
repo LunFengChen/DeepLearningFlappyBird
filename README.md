@@ -14,7 +14,7 @@
 - 修改原因：
   - 作者好像遗忘了他做的这么好的一个项目
   - 原项目运行不了
-  - 虽然简单修改后可以运行，但是代码毕竟有点久远有些地方可以微调一下，以及补上一定中文注释，方便我的小伙伴们学习神经网络
+  - 虽然简单修改后可以运行，但是代码毕竟有点久远有些地方可以微调一下，以及补上一定中文注释，用于学习神经网络
 ## Overview
 This project follows the description of the Deep Q Learning algorithm described in Playing Atari with Deep Reinforcement Learning [2] and shows that this learning algorithm can be further generalized to the notorious Flappy Bird.
 
